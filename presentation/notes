@@ -1,0 +1,48 @@
+Infrastructure as code
+ - IaC scales better than traditional management
+ - Gets benefits of code:
+   - Versionable (i need version 15.3 instead of 16.1 ...)
+   - Testable
+     - Can use TDD
+   - Repeatable
+Configuration management
+
+Chef
+ - Most basic piece is recipe:
+   - What to look like, not how to get there
+   - Many recipes => cookbook
+   - Chef agents acts upon your infrastructure based on cookbooks
+   - Idempotent
+ - Two ways to go:
+   - Hosted chef
+     - Full hosted (SaaS)
+     - Easy
+     - No maint
+     - Limited customization
+     - No control over access speed
+   - Chef server
+     - On premise
+     - Complex install
+     - Requires maint
+     - Fully customizable
+     - Enables rapid deployment
+  - Parts:
+    - Chef server
+    - Chef client nodes
+      - Ubuntu
+      - Windows
+      - etc
+    - Chef Development Kit
+    - Management console (optional)
+    - High availabiltiy and Federation (optional)
+    - Analytics platfrom (optional)
+      - Talks to nodes
+
+__________________
+STRUCTURE
+
+Problem:
+ - Slow to set up new environments traditionally
+   - Still logging on to _each_ server
+     - Business losing agility
+     - Much administring
