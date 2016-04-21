@@ -4,9 +4,32 @@
     <title>DIPS Trondheim Configuration Management - Presentation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="presentation.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <textarea id="source">
+
+class: center, middle, inverse
+
+# Configuration Management using Puppet
+Taste me you will see, more is all you need
+
+???
+
+P = Presenters mode
+C = New window
+
+My presentation was supposed to be about puppet...
+
+---
+class: center, middle
+
+![](http://i.imgur.com/lmq75KF.gif)
+
+???
+
+... but I changed my mind ...
+---
 
 class: center, middle, inverse
 
@@ -15,8 +38,10 @@ Automate what is automatable, and make automatable what is not so.
 
 ???
 
-P = Presenters mode
-C = New window
+... so chef it is.
+
+If you want to remember something from this presentation:
+Mindset over tools!
 
 ---
 .left-column[
@@ -27,15 +52,35 @@ C = New window
 
 - Motivation
 
+<br/><br/>
+
 - Software Configuration Management
+
+<br/><br/>
 
 - Infrastructure as Code
 
-- Chef
+<br/><br/>
+
+- Tools (Chef, etc)
+
+<br/><br/>
+
+- Demo
 
 ]
 
 ???
+
+We'll start with discussing about why this is relevant for us around this table.
+
+We'll continue discussing software configuration management in general.
+
+After that I just need a slide about infrastructure as code.
+
+We'll quickly mention a few tools which can do the job, before we take a deeper look at Chef...
+
+... with a demo at the end.
 
 ---
 .left-column[
@@ -46,7 +91,9 @@ C = New window
 
 - Test environments
 
-- Apply software development techniques
+<br/><br/>
+
+- Apply software development techniques we know and use in our regular work
 
 ]
 
@@ -55,6 +102,7 @@ C = New window
 Our (currently) biggest paint point is our test environments.
 
  - They take long time to set up
+ - Still logging on to _each_ server
  - Setup is error-prone
  - Due to our IT-regime, we hang on to our servers as if life depended upon it.
    We don't let go until long after the server is dead.
@@ -63,12 +111,30 @@ We are software developers in charge of environments. We should apply software
 development techniques we know to this job:
 
  - Test driven development
+ - Version control
+ - Continious delivery
  - Our infrastructure as code
  
-This is a solved problem.
+How this can be done is fortunatly a solved problem.
+
 Introducing Software Configuration Management:
 
 ---
+
+class: center, middle, inverse
+
+# Software Configuration Management
+
+???
+
+Several words is used for this topic.
+
+Sofrware Configuration Management has an abbreviation which crashes with source control management, which is unfortunate.
+
+Personally I use configuration management a lot, since, well - the only thing we do here at work is software.
+
+---
+
 .left-column[
   ## Motivation
   
@@ -79,21 +145,26 @@ Introducing Software Configuration Management:
 
 ## Software Configuration Management is:
 
- - Version control
- 
- - Build and release management
- 
- - Deployment
- 
- - Environment management
- 
- - Tracking and monitoring changes
- 
+.blockquote[
+  [...]software configuration management [...] is the task of tracking and controlling changes in the software[...]
+] 
 ]
 
 ???
-
+According to Wikipedia:
 SCM is the task of tracking and controlling changes in the software.
+
+Kinda vague, yet not too alien.
+
+We kinda do this with our software already - all the way to our chocolatey/nuget feeds.
+
+But after we've created our software, things kinda stops. There are three things we are missing:
+
+ - Easy way to provision servers.
+ 
+ - Easy way to deploy our apps.
+ 
+The latter can be included in the former. For the latter, I suggest we use Octopus Deploy. For the former, SCM can be a solution.
 
 ---
 .left-column[
@@ -104,11 +175,82 @@ SCM is the task of tracking and controlling changes in the software.
 
 .right-column[
 
-## Solves
+## Software Configuration Management includes:
 
- - Configuration control
+ - Version control
  
- - Environment management
+ - Build and release management
+ 
+ - Tracking and monitoring changes
+ 
+]
+
+???
+In order to achieve this we need to have:
+
+Version control.
+ - We currently use git as our version control system.
+ 
+A working buildsystem.
+ - We already have a new buildsystem written in scriptcs which can be run on any(tm) buildserver (teamcity, tfs, travis, jenkins, you name it) used by the rest of the code.
+ - This is achievable.
+ 
+Release management:
+ - For the rest of the code, we produce chocolatey and nuget packages, and have a strict versioning regime based on semantic versioning. We build CI, RC and stable packages.
+ - This is achievable.
+ 
+Tracking and monitoring changes:
+ - We are currently able to do this using the previously mentioned points for the rest of our code.
+ - No reason we should not be able to do this for our infrastructure.
+ 
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+]
+
+.right-column[
+
+## Software Configuration Management includes:
+
+ - Version control
+ 
+ - Build and release management
+ 
+ - Tracking and monitoring changes
+ 
+.red[
+- Deployment
+ 
+- Environment management
+]
+]
+
+???
+
+What may be a bit alien to us (for now) is:
+
+Deployment:
+ - We do not have a working solution for deploying our packages to the 500-ish servers we have for test.
+ 
+Environment management:
+ - We also do most environment management manually (with the exception of cloning existing VMs and some few templates with obscure names).
+ - We deeply care about or servers, because it took us time to make them work. What if those steps could be reproduced through code?
+
+Software configuration management includes all these steps to achieve their goals.
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+]
+
+.right-column[
+
+## Software Configuration Management solves
+
+ - Configuration control/Environment management
 
  - Reduce redundant work
  
@@ -120,8 +262,333 @@ SCM is the task of tracking and controlling changes in the software.
 
 ???
 
+SCM solves some of the following problems we have:
 
-Speaker notes goes here when I have the time to write them :)
+ - It gives us full control over what runs where. Have we installed the latest server-component? What version of the .NET framework is installed? What about IIS-addons, etc?
+ 
+ - We need to do the hard work of configuring once, and can re-use that configuration, or create configuration based on the previous configuration. Using known development features like inheritance(!).
+ 
+ - We avoid configuration errors made by users, like "oh, i have configured Oracle12C wrong", or "My appserver is running against the wrong database".
+ 
+ - We can track errors in configuration systematically instead of qualified guesses.
+
+---
+
+class: center, middle, inverse
+
+# Infrastructure as code
+
+???
+
+Just a short mention of IaC. Most has been mentioned already.
+
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+]
+
+.right-column[
+## Infrastructure as Code
+
+ - Uses higher level language
+ - Most tools are idempotent
+ - Apply:
+   - Version control
+   - Design patterns
+   - TDD
+ - Scales better than traditional management
+]
+
+???
+
+- Most IaC is written in higher level language of some sort.
+
+- Most tools are idempotent - can apply changes many times resulting in same outcome.
+
+- Can apply software engineering techniques to our infrastructure:
+  - Version control
+  - Design patterns
+  - TDD
+  
+- Scales better than traditional management.
+
+---
+
+class: center, middle, inverse
+
+# Tools
+
+???
+
+So which tools can we use for this?
+
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+  
+  ## Tools
+]
+.right-column[
+
+## There are lots to choose from...
+
+![](http://blog.takipi.com/wp-content/uploads/2015/08/chef.puppet.ansibe.saltstack.fabric.png)
+]
+
+???
+
+Lots of tools to choose from.
+
+We got a mail from puppet labs last year, but dont think we responded.
+
+Common denominator:
+ - Not written in C#/.NET
+ 
+Some examples of syntaxes following:
+
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+  
+  ## Tools
+]
+.right-column[
+
+## Example syntax - Ansible:
+
+```ansible
+--- 
+- hosts: server
+  sudo: yes
+  sudo_user: root
+
+  tasks:
+
+  - name: install mysql-server
+    apt: name=mysql-server state=present update_cache=yes
+
+  - name: install ansible dependencies
+    apt: name=python-mysqldb state=present
+
+  - name: Ensure mysql is running 
+    service: name=mysql state=started
+```
+]
+???
+Ansible.
+
+Very similar to yaml.
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+  
+  ## Tools
+]
+.right-column[
+
+## Example syntax - Chef:
+
+```ruby
+package "apache2" do
+  case node[:platform]
+  when "centos","redhat","fedora","suse"
+    package_name "httpd"
+  when "debian","ubuntu"
+    package_name "apache2"
+  when "arch"
+    package_name "apache"
+  end
+  action :install
+end
+```
+]
+
+???
+
+Chef is ruby. Kinda.
+
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+  
+  ## Tools
+]
+.right-column[
+
+## Example syntax - Puppet:
+
+```ruby
+class {'::teamcity':
+  agent_name            => 'sample-build-agent',
+  manage_user           => true,
+  manage_group          => true,
+}
+```
+]
+
+???
+Own DSL.
+---
+
+class: center, middle, inverse
+
+# Chef
+
+???
+
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+  
+  ## Tools
+]
+.right-column[
+
+## Chef - overview:
+
+![](chef1.png)
+
+]
+
+???
+
+Server:
+Takes care of configuring all the nodes.
+Two ways to go:
+  - Hosted chef
+    - Full hosted (SaaS)
+    - Easy
+    - No maint
+    - Limited customization
+    - No control over access speed
+  - Chef server
+    - On premise
+    - Complex install
+    - Requires maint
+    - Fully customizable
+    - Enables rapid deployment
+    
+Nodes:
+Client nodes, like our application servers, databases, solr indexes, etc.
+
+Chef SDK:
+Development kit used on your own PC.
+
+Management console: Gui
+
+---
+.left-column[
+  ## Motivation
+  
+  ## Software Configuration Management
+  
+  ## Infrastructure as Code
+  
+  ## Tools
+]
+.right-column[
+
+## Chef - terms:
+
+- Server
+
+- Node
+
+- Recipe
+
+- Cookbook
+
+- Roles
+
+- Knife
+
+]
+
+???
+
+---
+
+class: center, middle, inverse
+
+# Demo
+
+---
+class: inverse, center
+
+<img src="https://scontent-waw1-1.xx.fbcdn.net/hphotos-xlp1/t31.0-8/905739_4789788870746_1198239513_o.jpg" style="width: 100%" />
+???
+
+---
+
+class: center, middle, inverse
+
+# Demo
+
+???
+
+Edit something:
+admin.rb
+
+user 'Spud' do
+  comment 'An awesome dips admin user'
+  uid '1337'
+  group 'chef'
+  home '/home/spud'
+  shell '/bin/bash'
+  password 'fugleskremsel'
+end
+
+remember metadata
+knife cookbook upload demo-linux
+knife role from file .\demo-linux.rb
+
+on server:
+sudo chef-client
+tail /etc/passwd -n 1
+sudo su Spud
+
+---
+
+class: center, middle, inverse
+
+# Questions?
+
+???
+
+---
+# Useful links
+
+https://app.pluralsight.com/library/courses/chef-planning-installing/table-of-contents
+
+http://itrevolution.com/devops-culture-part-1/
+
+http://chef.io
+
+http://puppet.com
 
     </textarea>
     <script src="remark.js" type="text/javascript"></script>

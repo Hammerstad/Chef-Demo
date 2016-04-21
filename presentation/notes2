@@ -1,0 +1,34 @@
+knife ssl fetch (stå i rett mappe)
+knife ssl check
+knife cookbook list
+knife cookbook upload --all
+knife role list
+knife role from <filename>
+knife node list
+
+sudo chef-client
+knife node run_list add linux-client "role[lab-linux]"
+
+dips-node2.northeurope.cloudapp.azure.com
+
+_________________
+Edit something:
+admin.rb
+
+user 'Spud' do
+  comment 'An awesome dips admin user'
+  uid '1337'
+  group 'chef'
+  home '/home/spud'
+  shell '/bin/bash'
+  password 'fugleskremsel'
+end
+
+remember metadata
+knife cookbook upload demo-linux
+knife role from file .\demo-linux.rb
+
+on server:
+sudo chef-client
+tail /etc/passwd -n 1
+sudo su Spud

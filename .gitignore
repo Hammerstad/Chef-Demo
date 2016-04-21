@@ -1,3 +1,3 @@
-workspace/.rake_test_cache
-workspace/.chef
+workstation/.rake_test_cache
+workstation/.chef/
 demo/.vagrant/

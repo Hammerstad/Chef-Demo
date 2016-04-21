@@ -1,0 +1,57 @@
+.autoboticon {
+    position: relative;
+    background-image: url(http://img13.deviantart.net/872d/i/2015/003/8/9/g1_optimus_prime_autobot_logo_by_lady_elita_1-d8cj9dr.png); 
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 320px 320px;
+}
+
+.bumblebee {
+    position: relative;
+    background-image: url('bumblebee.png'); 
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: 300px 160px;
+}
+
+.blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  display: inline;
+  position:absolute;
+  top:100px;
+  left:250px;
+}
+
+.blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+.header-list ul {
+    font-style:italic; 
+    font-family:Georgia, Times, serif; 
+    font-size:40px; 
+    color:#000000;
+}
+.header-list ul li {
+    list-style-type: none;
+}
+.header-list ul li p {
+    padding:20px; 
+    font-style:normal; 
+    font-family:Arial; 
+    font-size:30px; 
+    color:#000000; 
+    border-left: 1px solid #999;
+}
+.header-list ul li p em {
+    display:block;
+}

@@ -10,6 +10,10 @@ Knife is the [command line interface](https://docs.chef.io/knife.html) for Chef.
 
 The knife.rb file is automatically created by the starter kit. This file can be customized to support configuration settings used by [cloud provider options](https://docs.chef.io/plugin_knife.html) and custom [knife plugins](https://docs.chef.io/plugin_knife_custom.html).
 
+Remember to update your hostfile according to `chef_server_url` in knife.rb. On windows add the following to your hostfile(located at `C:\Windows\System32\drivers\etc`):
+        
+        192.168.1.2			chefserver.vagrant.local
+
 Also located inside the .chef directory are .pem files, which contain private keys used to authenticate requests made to the Chef server. The USERNAME.pem file contains a private key unique to the user (and should never be shared with anyone). The ORGANIZATION-validator.pem file contains a private key that is global to the entire organization (and is used by all nodes and workstations that send requests to the Chef server).
 
 More information about knife.rb configuration options can be found in [the documentation for knife](https://docs.chef.io/config_rb_knife.html).
